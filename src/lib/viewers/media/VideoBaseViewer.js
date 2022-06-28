@@ -8,7 +8,7 @@ import { getCurrentUser } from '../../db/user';
 
 const MOUSE_MOVE_TIMEOUT_IN_MILLIS = 1000;
 const CLASS_PLAY_BUTTON = 'bp-media-play-button';
-
+const CLASS_VIEW_NOTE_BUTTON = 'bp-media-view-note-button';
 class VideoBaseViewer extends MediaBaseViewer {
     /**
      * @inheritdoc
@@ -57,6 +57,13 @@ class VideoBaseViewer extends MediaBaseViewer {
         this.playButtonEl.classList.add(CLASS_PLAY_BUTTON);
         this.playButtonEl.classList.add(CLASS_HIDDEN);
         this.playButtonEl.innerHTML = ICON_PLAY_LARGE;
+
+        // video note popup button
+        this.viewNoteButtonEl = this.mediaContainerEl.appendChild(document.createElement('div'));
+        this.viewNoteButtonEl.classList.add(CLASS_VIEW_NOTE_BUTTON);
+        this.viewNoteButtonEl.classList.add(CLASS_HIDDEN);
+        const button = this.viewNoteButtonEl.appendChild(document.createElement('button'));
+        button.innerHTML = 'View Note';
 
         this.lowerLights();
     }

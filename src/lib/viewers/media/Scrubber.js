@@ -310,6 +310,40 @@ class Scrubber extends EventEmitter {
     getConvertedEl() {
         return this.convertedEl;
     }
+
+    /**
+     * Adds notes to video scrubber
+     */
+    addVideoNotes(notes) {
+        if (this.scrubberEl && notes) {
+            notes.forEach(note => {
+                const newNote = document.createElement('div');
+                const tooltip = document.createElement('p');
+                tooltip.classList.add('bp-note-tooltip');
+                tooltip.innerHTML = 'View comments';
+                newNote.append(tooltip);
+                newNote.classList.add('bp-media-scrubber-note');
+                this.scrubberEl.appendChild(newNote);
+                const location = Math.max(Math.min(note.time, this.convertedValue), MIN_VALUE);
+                newNote.style.left = `${location * 100}%`;
+                newNote.onclick = () => this.onScrubberNoteClick(note);
+            });
+        }
+    }
+
+    /**
+     * scrubber note click event listener.
+     * @param {*} note
+     */
+    onScrubberNoteClick(note) {
+        if (note) {
+            console.log(' on note click , this will show the popup', note);
+            this.emit({
+                event: 'on-note-click',
+                note,
+            });
+        }
+    }
 }
 
 export default Scrubber;

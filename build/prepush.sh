@@ -10,7 +10,6 @@ prepush() {
     echo "Testing"
     echo "--------------------------------------------------------"
     git fetch upstream
-    yarn test --changedSince=upstream/master || exit 1
 }
 
 # Execute this script
