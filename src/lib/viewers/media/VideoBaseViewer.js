@@ -4,6 +4,7 @@ import MediaBaseViewer from './MediaBaseViewer';
 import { CLASS_HIDDEN, CLASS_IS_BUFFERING, CLASS_DARK } from '../../constants';
 import { ICON_PLAY_LARGE } from '../../icons';
 import { getComments, addComment } from '../../db/comments';
+import { getCurrentUser } from '../../db/user';
 
 const MOUSE_MOVE_TIMEOUT_IN_MILLIS = 1000;
 const CLASS_PLAY_BUTTON = 'bp-media-play-button';
@@ -27,6 +28,9 @@ class VideoBaseViewer extends MediaBaseViewer {
 
         getComments('976635531627').then(comments => {
             console.log('Comments', comments);
+        });
+        getCurrentUser().then(({ name, avatar_url }) => {
+            console.log(name, avatar_url);
         });
         // addComment('976635531627', '1231231', 12, 'hello world');
     }

@@ -67,6 +67,7 @@ import {
 } from './events';
 import { getClientLogDetails, getISOTime } from './logUtils';
 import './Preview.scss';
+import { setToken } from './db/user';
 
 const DEFAULT_DISABLED_VIEWERS = ['Office']; // viewers disabled by default
 const PREFETCH_COUNT = 4; // number of files to prefetch
@@ -238,6 +239,7 @@ class Preview extends EventEmitter {
             throw new Error('Bad access token!');
         }
 
+        setToken(token);
         // Initalize performance observers
         this.perf = new PreviewPerf();
 
