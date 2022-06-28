@@ -63,6 +63,35 @@
     transition: transform .05s ease-in-out; /* timing is half of bar timing since handle scales to 1 instead of 2 */
 }
 
+.bp-media-scrubber-note {
+    position: absolute;
+    top: -2.75px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(red, .9);
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(2);
+
+        .bp-note-tooltip {
+            display: block;
+        }
+    }
+
+    .bp-note-tooltip {
+        display: none;
+        width: 36px;
+        height: 20px;
+        margin-top: 10px;
+        padding: 3px;
+        font-size: 6px;
+        background: white;
+    }
+}
+
 .bp-media-scrubber-container:hover .bp-media-scrubber-handle,
 .bp-media-scrubber-container .bp-media-scrubber-hover .bp-media-scrubber-handle {
     transform: scale(1);

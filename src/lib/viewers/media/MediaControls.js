@@ -29,13 +29,13 @@ class MediaControls extends EventEmitter {
      * @param {Cache} cache - Cache instance
      * @return {MediaControls} Controls instance
      */
-    constructor(containerEl, mediaEl, cache) {
+    constructor(containerEl, mediaEl, cache, notes) {
         super();
 
         this.containerEl = containerEl;
         this.mediaEl = mediaEl;
         this.cache = cache;
-
+        this.notes = notes;
         insertTemplate(this.containerEl, controlsTemplate);
 
         this.wrapperEl = this.containerEl.querySelector('.bp-media-controls-wrapper');
@@ -61,6 +61,8 @@ class MediaControls extends EventEmitter {
 
         this.subtitlesButtonEl = this.wrapperEl.querySelector('.bp-media-cc-icon');
         this.setLabel(this.subtitlesButtonEl, __('media_subtitles_cc'));
+
+        this.viewNoteButtonEl = this.wrapperEl.querySelector('.bp-media-view-note-button');
 
         // Bind context for callbacks
         this.mouseenterHandler = this.mouseenterHandler.bind(this);
@@ -286,6 +288,14 @@ class MediaControls extends EventEmitter {
             0,
             1,
         );
+        const videoNotes = this.notes.map(n => {
+            return {
+                ...n,
+                time: this.mediaEl.duration ? n.time / this.mediaEl.duration : 0,
+            };
+        });
+        this.timeScrubber.addVideoNotes(videoNotes);
+
         this.setTimeCode(this.mediaEl.currentTime || 0); // This also sets the aria values
         this.timeScrubber.on('valuechange', () => {
             this.emit('timeupdate', this.getTimeFromScrubber());
