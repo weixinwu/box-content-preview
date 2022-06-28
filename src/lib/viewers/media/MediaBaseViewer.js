@@ -1,5 +1,7 @@
 import debounce from 'lodash/debounce';
 import isEmpty from 'lodash/isEmpty';
+import ReactDOM from 'react-dom';
+import React from 'react';
 import BaseViewer from '../BaseViewer';
 import Browser from '../../Browser';
 import MediaControls from './MediaControls';
@@ -8,6 +10,7 @@ import Timer from '../../Timer';
 import { CLASS_ELEM_KEYBOARD_FOCUS, CLASS_HIDDEN, CLASS_IS_BUFFERING, CLASS_IS_VISIBLE } from '../../constants';
 import { ERROR_CODE, MEDIA_METRIC, MEDIA_METRIC_EVENTS, VIEWER_EVENT } from '../../events';
 import { getProp } from '../../util';
+import TagsList from './TagsList';
 
 const CSS_CLASS_MEDIA = 'bp-media';
 const CSS_CLASS_MEDIA_CONTAINER = 'bp-media-container';
@@ -112,6 +115,13 @@ class MediaBaseViewer extends BaseViewer {
         this.mediaContainerEl.setAttribute('tabindex', '-1');
         this.mediaContainerEl.className = CSS_CLASS_MEDIA_CONTAINER;
         this.mediaContainerEl.addEventListener('click', this.containerClickHandler);
+
+        this.tagsOverlay = document.createElement('div');
+        this.tagsOverlay.classList.add('tags-overlay-container');
+
+        this.mediaContainerEl.appendChild(this.tagsOverlay);
+
+        ReactDOM.render(<TagsList />, this.tagsOverlay);
 
         this.loadTimeout = 100000;
         this.oldVolume = DEFAULT_VOLUME;

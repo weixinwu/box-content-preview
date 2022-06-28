@@ -124,3 +124,15 @@
     left: 0;
     width: 100%;
 }
+
+.tags-overlay-container {
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+    width: 25%;
+    height: calc(100% - 60px - 30px);
+    background-color: #b2adad63;
+    border-radius: 10px 0 0 10px;
+    transform: translate(0, 32px);
+    backdrop-filter: blur(4px);
+}
