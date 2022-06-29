@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './TagsList.scss';
 import { getUserById, getCurrentUser } from '../../db/user';
 import { addComment } from '../../db/comments';
@@ -24,14 +24,26 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
               return { ...c, ...getUserById(1) };
           })
         : [];
-    const [tagsList, _] = React.useState(_tags);
-    const textareaRef = React.useRef(null);
-    const [user, setUser] = React.useState<User>();
+    const [tagsList, _] = useState(_tags);
+    const textareaRef = useRef(null);
+    const fileInputRef = useRef<any>(null);
+    const [user, setUser] = useState<User>();
+    const [selectedFiles, setSelectedFiles] = useState<any[]>([]);
 
-    React.useEffect(async () => {
+    useEffect(async () => {
         const me = await getCurrentUser();
         setUser(me);
     }, []);
+
+    function selectFiles(e: React.ChangeEvent<HTMLInputElement>) {
+        const newFiles = [...(e.target.files as any)];
+        setSelectedFiles(files => [...files, ...newFiles]);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+
+    function removeSelectedFile(file: any) {
+        setSelectedFiles(files => files.filter(f => f !== file));
+    }
 
     return (
         <div className="container">
@@ -57,24 +69,38 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
             <div className="new-comment-container">
                 <div className="input-title" />
                 <textarea ref={textareaRef} className="input-box" />
+                <input type="file" multiple onChange={selectFiles} ref={fileInputRef} />
                 <button
                     onClick={() => {
                         const videoID = '977307283157';
                         const userId = '1123';
                         const timestamp = Math.floor(mediaEl.currentTime);
-                        addComment(videoID, user ? user.id : '123', timestamp, textareaRef.current.value, 5).then(
-                            result => {
-                                console.log(result);
-                                textareaRef.current.value = '';
-                                // TODO: refresh video timeline to show the comment indicators
-                            },
-                        );
+                        addComment(
+                            videoID,
+                            user ? user.id : '123',
+                            timestamp,
+                            textareaRef.current.value,
+                            selectedFiles as any,
+                        ).then(result => {
+                            console.log(result);
+                            textareaRef.current.value = '';
+                            setSelectedFiles([]);
+                            // TODO: refresh video timeline to show the comment indicators
+                        });
                     }}
                     type="button"
                 >
                     Done
                 </button>
+
+                
             </div>
+
+            <div className="new-comment-attachments">
+                    {selectedFiles.map(file => (
+                        <div>{file.name} <button type="button" onClick={() => removeSelectedFile(file)}>X</button></div>
+                    ))}
+                </div>
         </div>
     );
 }
