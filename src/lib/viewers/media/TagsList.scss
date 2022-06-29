@@ -95,7 +95,7 @@
 
             .tag-comment {
                 padding: 4px;
-                color: black;
+                //color: black;
                 flex-grow: 1;
             }
 
@@ -106,6 +106,8 @@
                 top: 2px;
                 visibility: hidden;
                 cursor: pointer;
+                background: transparent;
+                border: none;
             }
 
             &:hover .tag-remove-btn {
