@@ -3,8 +3,9 @@ import ControlsRoot from '../controls';
 import MediaBaseViewer from './MediaBaseViewer';
 import { CLASS_HIDDEN, CLASS_IS_BUFFERING, CLASS_DARK } from '../../constants';
 import { ICON_PLAY_LARGE } from '../../icons';
-import { getComments, addComment } from '../../db/comments';
+import { getComments, addComment, addLike, removeLike, removeComment } from '../../db/comments';
 import { getCurrentUser } from '../../db/user';
+import { uploadFile } from '../../db/file';
 
 const MOUSE_MOVE_TIMEOUT_IN_MILLIS = 1000;
 const CLASS_PLAY_BUTTON = 'bp-media-play-button';
@@ -26,9 +27,14 @@ class VideoBaseViewer extends MediaBaseViewer {
         this.pauseHandler = this.pauseHandler.bind(this);
         this.resize = this.resize.bind(this);
 
-        getCurrentUser().then(user => {
-            console.log(user);
+        getComments('977307283157').then(comments => {
+            console.log('comments', comments);
         });
+        // addComment('976635531627', '1231231', 124, 'hello world').then(comment => {
+        //     console.log('new comment', comment);
+        // });
+        // removeLike('976635531627', '1656491044890_mv1mim2ut6i', '1231231');
+        removeComment('976635531627', '1656491044890_mv1mim2ut6i');
     }
 
     /**
@@ -60,6 +66,19 @@ class VideoBaseViewer extends MediaBaseViewer {
         this.viewNoteButtonEl.classList.add(CLASS_HIDDEN);
         const button = this.viewNoteButtonEl.appendChild(document.createElement('button'));
         button.innerHTML = 'View Note';
+
+        this.fileButtonEl = this.mediaContainerEl.appendChild(document.createElement('input'));
+        this.fileButtonEl.type = 'file';
+        this.fileButtonEl.multiple = true;
+        this.fileButtonEl.style.position = 'absolute';
+        this.fileButtonEl.onchange = () => {
+            // console.log('value', this.fileButtonEl.files);
+            // uploadFile(this.fileButtonEl.files[0], '976635531627', '1656449899651_s24afy3nw7');
+            addComment('976635531627', '1231231', 124, 'hello world', this.fileButtonEl.files).then(comment => {
+                console.log('new comment', comment);
+            });
+        };
+        console.log('this.fileButtonEl ', this.fileButtonEl);
 
         this.lowerLights();
         this.fetchComments();

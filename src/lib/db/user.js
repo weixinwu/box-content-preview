@@ -3,11 +3,16 @@ export function setToken(aToken) {
     token = aToken;
 }
 
+const users = {};
+
 /**
  * @return {{name: string, avatar_url: string}}
  */
 export async function getUser(id) {
-    return await request(`users/${id}`);
+    if (!users[id]) {
+        users[id] = await request(`users/${id}`);
+    }
+    return users[id];
 }
 
 /**
