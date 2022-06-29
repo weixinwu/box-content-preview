@@ -126,8 +126,8 @@ class MediaBaseViewer extends BaseViewer {
             <TagsList
                 comments={comments}
                 mediaEl={this.mediaEl}
-                onTimeUpdate={this.handleTimeupdateFromMediaControls}
                 onShowAll={this.showAllTagsList.bind(this)}
+                onTimeUpdate={this.handleTimeupdateFromMediaControls}
             />,
             this.tagsOverlay,
         );

@@ -38,12 +38,12 @@ function parseComment(text) {
     return text.replace(linkPattern, linkMarkup);
 }
 
-function parseMentions(text: string): string{
+function parseMentions(text: string): string {
     const match = text.match(/_@(\w+)/);
     if (!match) return text;
 
     const [mention, username] = [...match];
-    console.log('mention, username', mention, username)
+    console.log('mention, username', mention, username);
     text = text.replace(mention, `<span class="tag-mention">@${username}</span>`);
     return parseMentions(text);
 }
@@ -116,7 +116,7 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                                             >
                                                 <svg
                                                     fill="#f9f8f8"
-                                                    height="12px"
+                                                    height="21px"
                                                     viewBox="0 0 24 24"
                                                     width="21px"
                                                     xmlns="http://www.w3.org/2000/svg"
