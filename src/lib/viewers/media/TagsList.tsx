@@ -10,11 +10,14 @@ interface User {
     name: string;
     id: string;
 }
-function getTimeFromTimeStamp(createdAt) {
-    const date = new Date(createdAt);
-    return `${date.getHours()}: ${date.getMinutes()}`;
+
+// timestamp in seconds
+function getTimeFromTimeStamp(timestamp) {
+    const minutes = timestamp > 60 ? Math.round(timestamp / 60) : '0';
+    const seconds = timestamp > 10 ? timestamp : `0${timestamp}`;
+    return `${minutes}:${seconds}`;
 }
-export default function TagsList({ comments, mediaEl }) {
+export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
     const activeTagId = 2;
     const _tags = comments
         ? comments.map(c => {
@@ -36,10 +39,12 @@ export default function TagsList({ comments, mediaEl }) {
                 <h2 className="tags-list-header">All tags</h2>
                 {comments &&
                     tagsList.map(tag => {
-                        const { initials, text, createdAt, name, id } = tag;
+                        const { initials, text, createdAt, name, id, timestamp } = tag;
                         return (
                             <div key={id} className={`tag-container ${id === activeTagId && 'active'}`}>
-                                <div className="tag-container-left">{getTimeFromTimeStamp(createdAt)}</div>
+                                <div className="tag-container-left" onClick={() => onTimeUpdate(timestamp)}>
+                                    {getTimeFromTimeStamp(timestamp)}
+                                </div>
                                 <div className="tag-container-right">
                                     <div className="user-icon" data-initials={initials} title={name.substring(0, 8)} />
                                     <div className="tag-comment">{text}</div>

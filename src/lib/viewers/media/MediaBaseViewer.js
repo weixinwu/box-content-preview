@@ -122,7 +122,14 @@ class MediaBaseViewer extends BaseViewer {
 
     renderTagList(comments) {
         ReactDOM.unmountComponentAtNode(this.tagsOverlay);
-        ReactDOM.render(<TagsList comments={comments} mediaEl={this.mediaEl} />, this.tagsOverlay);
+        ReactDOM.render(
+            <TagsList
+                comments={comments}
+                mediaEl={this.mediaEl}
+                onTimeUpdate={this.handleTimeupdateFromMediaControls}
+            />,
+            this.tagsOverlay,
+        );
     }
 
     /**
@@ -553,6 +560,7 @@ class MediaBaseViewer extends BaseViewer {
      * @return {void}
      */
     handleTimeupdateFromMediaControls(time) {
+        console.log(time);
         this.removePauseEventListener();
         this.setMediaTime(time);
     }
