@@ -107,6 +107,7 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                             console.log(result);
                             textareaRef.current.value = '';
                             setSelectedFiles([]);
+                            setTagsList(tags => ([...tags, {...result, ...getUserById(1)}]));
                             // TODO: refresh video timeline to show the comment indicators
                         });
                     }}
