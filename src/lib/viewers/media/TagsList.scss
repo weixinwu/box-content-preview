@@ -147,6 +147,13 @@
             }
         }
     }
+
+    .tag-mention {
+        background-color: #d2d5e4;
+        color: #1d60e2;
+        cursor: pointer;
+        padding: 0 2px;
+    }
 }
 .new-comment-container {
     display: flex;
