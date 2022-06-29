@@ -43,10 +43,6 @@ function parseMentions(text: string): string {
     if (!match) return text;
 
     const [mention, username] = [...match];
-<<<<<<< HEAD
-    console.log('mention, username', mention, username);
-=======
->>>>>>> c93946f72429a230918193784432307cb25f081b
     text = text.replace(mention, `<span class="tag-mention">@${username}</span>`);
     return parseMentions(text);
 }
