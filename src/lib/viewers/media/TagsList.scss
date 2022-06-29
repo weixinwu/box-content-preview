@@ -170,10 +170,10 @@
             font-size: 13px;
             font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-            &:active, &:focus {
+            &:active,
+            &:focus {
                 outline: none;
             }
-
         }
     }
     .new-comment-bottom {
@@ -232,4 +232,17 @@
     background: transparent;
     border: none;
     cursor: pointer;
+    margin-top: -1px;
+}
+
+.new-attachment-name {
+    max-width: 230px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.selected-file-container {
+    display: flex;
 }

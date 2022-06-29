@@ -38,12 +38,11 @@ function parseComment(text) {
     return text.replace(linkPattern, linkMarkup);
 }
 
-function parseMentions(text: string): string{
+function parseMentions(text: string): string {
     const match = text.match(/_@(\w+)/);
     if (!match) return text;
 
     const [mention, username] = [...match];
-    console.log('mention, username', mention, username)
     text = text.replace(mention, `<span class="tag-mention">@${username}</span>`);
     return parseMentions(text);
 }
@@ -107,7 +106,9 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                                             />
                                             <div
                                                 className="tag-comment"
-                                                dangerouslySetInnerHTML={{ __html: parseMentions(parseComment(text)) }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: parseMentions(parseComment(text)),
+                                                }}
                                             />
                                             <button
                                                 className="tag-remove-btn"
@@ -193,8 +194,8 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                 </div>
                 <div className="new-comment-attachments">
                     {selectedFiles.map(file => (
-                        <div key={file.name}>
-                            {file.name}{' '}
+                        <div key={file.name} className="selected-file-container">
+                            <div className="new-attachment-name">{file.name}</div>{' '}
                             <button
                                 className="button button-primary button-primary-sm remove-attachment"
                                 onClick={() => removeSelectedFile(file)}
