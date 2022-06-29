@@ -29,13 +29,12 @@ class MediaControls extends EventEmitter {
      * @param {Cache} cache - Cache instance
      * @return {MediaControls} Controls instance
      */
-    constructor(containerEl, mediaEl, cache, notes) {
+    constructor(containerEl, mediaEl, cache) {
         super();
 
         this.containerEl = containerEl;
         this.mediaEl = mediaEl;
         this.cache = cache;
-        this.notes = notes;
         insertTemplate(this.containerEl, controlsTemplate);
 
         this.wrapperEl = this.containerEl.querySelector('.bp-media-controls-wrapper');
@@ -288,13 +287,6 @@ class MediaControls extends EventEmitter {
             0,
             1,
         );
-        const videoNotes = this.notes.map(n => {
-            return {
-                ...n,
-                time: this.mediaEl.duration ? n.time / this.mediaEl.duration : 0,
-            };
-        });
-        this.timeScrubber.addVideoNotes(videoNotes);
 
         this.setTimeCode(this.mediaEl.currentTime || 0); // This also sets the aria values
         this.timeScrubber.on('valuechange', () => {
@@ -980,6 +972,17 @@ class MediaControls extends EventEmitter {
      */
     enableHDSettings() {
         this.settings.enableHD();
+    }
+
+    addCommentsToVidScrubber(comments) {
+        const times = Object.keys(comments);
+        const videoComments = times.map(t => {
+            return {
+                ...comments[t],
+                time: this.mediaEl.duration ? t / this.mediaEl.duration : 0,
+            };
+        });
+        this.timeScrubber.addVideoComments(videoComments);
     }
 }
 

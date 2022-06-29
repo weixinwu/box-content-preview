@@ -314,7 +314,7 @@ class Scrubber extends EventEmitter {
     /**
      * Adds notes to video scrubber
      */
-    addVideoNotes(notes) {
+    addVideoComments(notes) {
         if (this.scrubberEl && notes) {
             notes.forEach(note => {
                 const newNote = document.createElement('div');
@@ -338,10 +338,6 @@ class Scrubber extends EventEmitter {
     onScrubberNoteClick(note) {
         if (note) {
             console.log(' on note click , this will show the popup', note);
-            this.emit({
-                event: 'on-note-click',
-                note,
-            });
         }
     }
 }
