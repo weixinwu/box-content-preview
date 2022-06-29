@@ -17,6 +17,28 @@ function getTimeFromTimeStamp(timestamp) {
     const seconds = timestamp > 9 ? timestamp : `0${timestamp}`;
     return `${minutes}:${seconds}`;
 }
+
+function parseComment(text) {
+    const linkNameStart = (text && text.indexOf('[')) || -1;
+    if (linkNameStart < 0) {
+        return text;
+    }
+    const linkNameEnd = text.indexOf('|');
+    const linkStart = linkNameEnd + 1;
+    const linkEnd = text.indexOf(']');
+
+    const linkName = text.slice(linkNameStart + 1, linkNameEnd);
+    const link = text.slice(linkStart, linkEnd);
+
+    const linkPattern = text.slice(linkNameStart, linkEnd + 1);
+
+    const linkMarkup = `<a href="${link}" target="_blank">${linkName}</a>`;
+
+    console.log(linkPattern);
+
+    return text.replace(linkPattern, linkMarkup);
+}
+
 export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll }) {
     const videoID = '977307283157';
     const activeTagId = 2;
@@ -73,7 +95,10 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                                             data-initials={initials}
                                             title={name.substring(0, 8)}
                                         />
-                                        <div className="tag-comment">{text}</div>
+                                        <div
+                                            className="tag-comment"
+                                            dangerouslySetInnerHTML={{ __html: parseComment(text) }}
+                                        />
                                         <button
                                             className="tag-remove-btn"
                                             onClick={() => removeTag(id)}
