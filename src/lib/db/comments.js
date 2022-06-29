@@ -1,6 +1,7 @@
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from './getDb';
-import { uploadFile } from './file';
+import { getUrl, uploadFile } from './file';
+import { getUser } from './user';
 
 /**
  * @return {Promise<{
@@ -18,8 +19,9 @@ export async function getComments(videoId) {
 
     if (docSnap.exists()) {
         const data = docSnap.data();
-        let comments = addAttachments(data.comments, data.attachments);
+        let comments = await addAttachments(data.comments, data.attachments);
         comments = addLikes(comments, data.likes);
+        // await addUserData(comments)
         return groupCommentsByTimestamp(comments);
     }
     return {};
@@ -62,8 +64,10 @@ export async function addComment(videoId, userId, timestamp, text, files = [], t
         });
 
         const uploadedFiles = await Promise.all(promises);
+        console.log('uploadedFiles',uploadedFiles)
         filesData = uploadedFiles.map(file => ({
             commentId: comment.id,
+            name: file.name.split('_').slice(4).join('_'),
             path: file.fullPath,
             contentType: file.contentType,
         }));
@@ -119,12 +123,13 @@ function groupCommentsByTimestamp(comments) {
     }, {});
 }
 
-function addAttachments(comments, attachments) {
+async function addAttachments(comments, attachments) {
     for (const comment of comments) {
         comment.attachments = [];
         if (attachments) {
             for (const attachment of attachments) {
                 if (attachment.commentId === comment.id) {
+                    attachment.downloadUrl = await getUrl(attachment.path);
                     comment.attachments.push(attachment);
                 }
             }
@@ -147,4 +152,12 @@ function addLikes(comments, likes) {
         }
     }
     return comments;
+}
+
+async function addUserData(comments) {
+    return Promise.all(comments.map(async comment => {
+        const user = await getUser(comment.userId);
+        comment.userName = user.name;
+        comment.userAvatarUrl = user.avatar_url;
+    }))
 }
