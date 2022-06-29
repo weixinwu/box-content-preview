@@ -62,6 +62,7 @@ class VideoBaseViewer extends MediaBaseViewer {
         button.innerHTML = 'View Note';
 
         this.lowerLights();
+        this.fetchComments();
     }
 
     /**
