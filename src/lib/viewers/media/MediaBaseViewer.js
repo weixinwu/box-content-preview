@@ -28,23 +28,6 @@ const ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS;
 const PLAY_PROMISE_NOT_SUPPORTED = 'play_promise_not_supported';
 const MEDIA_TOKEN_EXPIRE_ERROR = 'PIPELINE_ERROR_READ';
 const MAX_RETRY_TOKEN = 3; // number of times to retry refreshing token for unauthorized error
-const notes = [
-    {
-        id: 1,
-        time: 2,
-        value: 'some text',
-    },
-    {
-        id: 3,
-        time: 12,
-        value: 'some other texts',
-    },
-    {
-        id: 2,
-        time: 21,
-        value: 'some other texts',
-    },
-];
 
 class MediaBaseViewer extends BaseViewer {
     /** @property {Object} - Keeps track of the different media metrics */
@@ -518,7 +501,7 @@ class MediaBaseViewer extends BaseViewer {
      * @return {void}
      */
     loadUI() {
-        this.mediaControls = new MediaControls(this.mediaContainerEl, this.mediaEl, this.cache, notes);
+        this.mediaControls = new MediaControls(this.mediaContainerEl, this.mediaEl, this.cache);
 
         this.addEventListenersForMediaControls();
         this.addEventListenersForMediaElement();
@@ -597,8 +580,6 @@ class MediaBaseViewer extends BaseViewer {
     setTimeCode() {
         if (this.mediaControls) {
             this.mediaControls.setTimeCode(this.mediaEl.currentTime);
-
-            this.showViewNoteButtonAtCurrTime(this.mediaEl.currentTime);
         } else {
             this.renderUI();
         }
@@ -1246,32 +1227,6 @@ class MediaBaseViewer extends BaseViewer {
      */
     createTimerTag(tagName) {
         return Timer.createTag(this.options.file.id, tagName);
-    }
-
-    getNoteAtCurrTime(currTime) {
-        // TODO: make the adjustment relative to duration of video.
-        const ADJUSTMENT = 1;
-        const minTime = currTime - ADJUSTMENT;
-        const maxTime = currTime + ADJUSTMENT;
-        const note = notes.find(n => n.time >= minTime && n.time <= maxTime);
-        return note;
-    }
-
-    // evaluates to see whether the view button should be shown.
-    showViewNoteButtonAtCurrTime(currTime) {
-        const note = this.getNoteAtCurrTime(currTime);
-        if (note && this.viewNoteButtonEl) {
-            // shownotes
-            this.viewNoteButtonEl.classList.remove('soft-hide');
-
-            this.viewNoteButtonEl.classList.remove(CLASS_HIDDEN);
-        } else {
-            this.viewNoteButtonEl.classList.add('soft-hide');
-            setTimeout(() => {
-                // for animation purpose
-                this.viewNoteButtonEl.classList.add(CLASS_HIDDEN);
-            }, 200);
-        }
     }
 }
 

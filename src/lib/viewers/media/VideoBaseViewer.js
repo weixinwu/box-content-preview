@@ -6,6 +6,7 @@ import { ICON_PLAY_LARGE } from '../../icons';
 import { getComments, addComment } from '../../db/comments';
 import { getCurrentUser } from '../../db/user';
 
+const WEIXIN_ID = '18785632699';
 const MOUSE_MOVE_TIMEOUT_IN_MILLIS = 1000;
 const CLASS_PLAY_BUTTON = 'bp-media-play-button';
 const CLASS_VIEW_NOTE_BUTTON = 'bp-media-view-note-button';
@@ -26,13 +27,9 @@ class VideoBaseViewer extends MediaBaseViewer {
         this.pauseHandler = this.pauseHandler.bind(this);
         this.resize = this.resize.bind(this);
 
-        getComments('976635531627').then(comments => {
-            console.log('Comments', comments);
+        getCurrentUser().then(user => {
+            console.log(user);
         });
-        getCurrentUser().then(({ name, avatar_url }) => {
-            console.log(name, avatar_url);
-        });
-        // addComment('976635531627', '1231231', 12, 'hello world');
     }
 
     /**
@@ -66,6 +63,7 @@ class VideoBaseViewer extends MediaBaseViewer {
         button.innerHTML = 'View Note';
 
         this.lowerLights();
+        this.fetchComments();
     }
 
     /**
@@ -300,6 +298,14 @@ class VideoBaseViewer extends MediaBaseViewer {
     handleControlsShow = () => {
         this.mediaContainerEl.classList.add('bp-media-controls-is-visible');
     };
+
+    fetchComments() {
+        getComments('977307283157').then(comments => {
+            if (comments && this.mediaControls) {
+                this.mediaControls.addCommentsToVidScrubber(comments);
+            }
+        });
+    }
 }
 
 export default VideoBaseViewer;
