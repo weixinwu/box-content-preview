@@ -98,18 +98,14 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
                         {selectedFiles.map(file => (
                             <div key={file.name}>
                                 {file.name}{' '}
-                                <button
-                                    className="tag-input-button"
-                                    onClick={() => removeSelectedFile(file)}
-                                    type="button"
-                                >
+                                <button onClick={() => removeSelectedFile(file)} type="button">
                                     X
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
-                <input ref={fileInputRef} className="tag-input-button" multiple onChange={selectFiles} type="file" />
+                <input ref={fileInputRef} multiple onChange={selectFiles} type="file" />
             </div>
         </div>
     );
