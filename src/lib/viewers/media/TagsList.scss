@@ -67,13 +67,28 @@
 }
 .new-comment-container {
     display: flex;
-    .input-title {
+    flex-direction: column;
+    .new-comment-top {
+        .input-box {
+            width: calc(100% - 50px);
+            height: 70px;
+            
+        }
     }
-    .input-box {
-        width: calc(100% - 50px);
-        height: 70px;
-    }
-    button {
-        width: 50px;
+    .new-comment-bottom {
+        display: flex;
+        flex-direction: row;
+        button {
+            background-color: #0061d5b8;
+            border: none;
+            color: white;
+            padding: 5px 2px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            width: 50px;
+            border-radius: 5px;
+        }
     }
 }
