@@ -43,6 +43,8 @@
             display: flex;
             align-items: center;
             padding: 4px;
+            flex-grow: 1;
+            position: relative;
 
             [data-initials]::before {
                 display: inline-block;
@@ -61,6 +63,20 @@
             .tag-comment {
                 padding: 4px;
                 color: black;
+                flex-grow: 1;
+            }
+
+            .tag-remove-btn {
+                padding: 2px 4px 0 4px;
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                visibility: hidden;
+                cursor: pointer;
+            }
+
+            &:hover .tag-remove-btn {
+                visibility: visible;
             }
         }
     }

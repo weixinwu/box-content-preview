@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TagsList.scss';
 import { getUserById, getCurrentUser } from '../../db/user';
-import { addComment } from '../../db/comments';
+import { addComment, removeComment } from '../../db/comments';
 /**
  * Q:why not use real user name from the getUserById api?
  * A: difficult to set up demo data.
@@ -18,13 +18,14 @@ function getTimeFromTimeStamp(timestamp) {
     return `${minutes}:${seconds}`;
 }
 export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
+    const videoID = '977307283157';
     const activeTagId = 2;
     const _tags = comments
         ? comments.map(c => {
               return { ...c, ...getUserById(1) };
           })
         : [];
-    const [tagsList, _] = useState(_tags);
+    const [tagsList, setTagsList] = useState(_tags);
     const textareaRef = useRef(null);
     const fileInputRef = useRef<any>(null);
     const [user, setUser] = useState<User>();
@@ -45,6 +46,11 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
         setSelectedFiles(files => files.filter(f => f !== file));
     }
 
+    async function removeTag(id: string) {
+        setTagsList(tags => tags.filter(t => t.id !== id));
+        await removeComment(videoID, id);
+    }
+
     return (
         <div className="container">
             <div className="tags-container">
@@ -60,6 +66,9 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
                                 <div className="tag-container-right">
                                     <div className="user-icon" data-initials={initials} title={name.substring(0, 8)} />
                                     <div className="tag-comment">{text}</div>
+                                    <button className="tag-remove-btn" onClick={() => removeTag(id)}>
+                                        <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"/></svg>
+                                    </button>
                                 </div>
                             </div>
                         );
@@ -72,8 +81,6 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
                 <input type="file" multiple onChange={selectFiles} ref={fileInputRef} />
                 <button
                     onClick={() => {
-                        const videoID = '977307283157';
-                        const userId = '1123';
                         const timestamp = Math.floor(mediaEl.currentTime);
                         addComment(
                             videoID,
