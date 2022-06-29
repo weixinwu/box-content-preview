@@ -43,7 +43,10 @@ function parseMentions(text: string): string {
     if (!match) return text;
 
     const [mention, username] = [...match];
+<<<<<<< HEAD
     console.log('mention, username', mention, username);
+=======
+>>>>>>> c93946f72429a230918193784432307cb25f081b
     text = text.replace(mention, `<span class="tag-mention">@${username}</span>`);
     return parseMentions(text);
 }
@@ -107,7 +110,9 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                                             />
                                             <div
                                                 className="tag-comment"
-                                                dangerouslySetInnerHTML={{ __html: parseMentions(parseComment(text)) }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: parseMentions(parseComment(text)),
+                                                }}
                                             />
                                             <button
                                                 className="tag-remove-btn"
@@ -157,6 +162,17 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                     <textarea ref={textareaRef} className="input-box" placeholder="Add tag..." />
                 </div>
                 <div className="new-comment-bottom">
+                    <input
+                        ref={fileInputRef}
+                        className="hidden"
+                        id="files"
+                        multiple
+                        onChange={selectFiles}
+                        type="file"
+                    />
+                    <label className="button button-secondary" htmlFor="files">
+                        Select files
+                    </label>
                     <button
                         className="button button-primary"
                         onClick={() => {
@@ -179,25 +195,15 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                     >
                         Done
                     </button>
-                    <input
-                        ref={fileInputRef}
-                        className="hidden"
-                        id="files"
-                        multiple
-                        onChange={selectFiles}
-                        type="file"
-                    />
-                    <label className="button button-secondary" htmlFor="files">
-                        Select files
-                    </label>
                 </div>
                 <div className="new-comment-attachments">
                     {selectedFiles.map(file => (
-                        <div key={file.name}>
-                            {file.name}{' '}
+                        <div key={file.name} className="selected-file-container">
+                            <div className="new-attachment-name">{file.name}</div>{' '}
                             <button
-                                className="button button-primary button-primary-sm"
+                                className="button button-primary button-primary-sm remove-attachment"
                                 onClick={() => removeSelectedFile(file)}
+                                title="Remove attachment"
                                 type="button"
                             >
                                 X
