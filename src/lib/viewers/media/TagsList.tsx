@@ -157,6 +157,17 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                     <textarea ref={textareaRef} className="input-box" placeholder="Add tag..." />
                 </div>
                 <div className="new-comment-bottom">
+                    <input
+                        ref={fileInputRef}
+                        className="hidden"
+                        id="files"
+                        multiple
+                        onChange={selectFiles}
+                        type="file"
+                    />
+                    <label className="button button-secondary" htmlFor="files">
+                        Select files
+                    </label>
                     <button
                         className="button button-primary"
                         onClick={() => {
@@ -179,25 +190,15 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                     >
                         Done
                     </button>
-                    <input
-                        ref={fileInputRef}
-                        className="hidden"
-                        id="files"
-                        multiple
-                        onChange={selectFiles}
-                        type="file"
-                    />
-                    <label className="button button-secondary" htmlFor="files">
-                        Select files
-                    </label>
                 </div>
                 <div className="new-comment-attachments">
                     {selectedFiles.map(file => (
                         <div key={file.name}>
                             {file.name}{' '}
                             <button
-                                className="button button-primary button-primary-sm"
+                                className="button button-primary button-primary-sm remove-attachment"
                                 onClick={() => removeSelectedFile(file)}
+                                title="Remove attachment"
                                 type="button"
                             >
                                 X
