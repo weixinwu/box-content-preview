@@ -97,41 +97,44 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
             </div>
 
             <div className="new-comment-container">
-                <div className="input-title" />
-                <textarea ref={textareaRef} className="input-box" />
-                <input ref={fileInputRef} multiple onChange={selectFiles} type="file" />
-                <button
-                    onClick={() => {
-                        const timestamp = Math.floor(mediaEl.currentTime);
-                        addComment(
-                            videoID,
-                            user ? user.id : '123',
-                            timestamp,
-                            textareaRef.current.value,
-                            selectedFiles as any,
-                        ).then(result => {
-                            console.log(result);
-                            textareaRef.current.value = '';
-                            setSelectedFiles([]);
-                            setTagsList(tags => [...tags, { ...result, ...getUserById(1) }]);
-                            // TODO: refresh video timeline to show the comment indicators
-                        });
-                    }}
-                    type="button"
-                >
-                    Done
-                </button>
-            </div>
-
-            <div className="new-comment-attachments">
-                {selectedFiles.map(file => (
-                    <div>
-                        {file.name}{' '}
-                        <button onClick={() => removeSelectedFile(file)} type="button">
-                            X
-                        </button>
+                <div className="new-comment-top">
+                    <div className="input-title" />
+                    <textarea ref={textareaRef} className="input-box" placeholder="Add tag..." />
+                </div>
+                <div className="new-comment-bottom">
+                    <button
+                        onClick={() => {
+                            const timestamp = Math.floor(mediaEl.currentTime);
+                            addComment(
+                                videoID,
+                                user ? user.id : '123',
+                                timestamp,
+                                textareaRef.current.value,
+                                selectedFiles as any,
+                            ).then(result => {
+                                console.log(result);
+                                textareaRef.current.value = '';
+                                setSelectedFiles([]);
+                                setTagsList(tags => [...tags, { ...result, ...getUserById(1) }]);
+                                // TODO: refresh video timeline to show the comment indicators
+                            });
+                        }}
+                        type="button"
+                    >
+                        Done
+                    </button>
+                    <div className="new-comment-attachments">
+                        {selectedFiles.map(file => (
+                            <div key={file.name}>
+                                {file.name}{' '}
+                                <button onClick={() => removeSelectedFile(file)} type="button">
+                                    X
+                                </button>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                </div>
+                <input ref={fileInputRef} multiple onChange={selectFiles} type="file" />
             </div>
         </div>
     );
