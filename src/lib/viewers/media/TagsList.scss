@@ -97,6 +97,12 @@
                 padding: 4px;
                 //color: black;
                 flex-grow: 1;
+
+                a {
+                    text-decoration: underline;
+                    color: salmon;
+                    cursor: pointer;
+                }
             }
 
             .tag-remove-btn {
