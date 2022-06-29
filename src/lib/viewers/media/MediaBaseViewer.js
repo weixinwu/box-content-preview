@@ -101,16 +101,28 @@ class MediaBaseViewer extends BaseViewer {
 
         this.tagsOverlay = document.createElement('div');
         this.tagsOverlay.classList.add('tags-overlay-container');
-
         this.mediaContainerEl.appendChild(this.tagsOverlay);
-
-        ReactDOM.render(<TagsList />, this.tagsOverlay);
 
         this.loadTimeout = 100000;
         this.oldVolume = DEFAULT_VOLUME;
         this.pauseListener = null;
 
         this.startTimeInSeconds = this.getStartTimeInSeconds(this.startAt);
+        this.renderTagList(null);
+        this.hideTagOverlay();
+    }
+
+    hideTagOverlay() {
+        this.tagsOverlay.classList.add(CLASS_HIDDEN);
+    }
+
+    showTagOverlay() {
+        this.tagsOverlay.classList.remove(CLASS_HIDDEN);
+    }
+
+    renderTagList(comments) {
+        ReactDOM.unmountComponentAtNode(this.tagsOverlay);
+        ReactDOM.render(<TagsList comments={comments} mediaEl={this.mediaEl} />, this.tagsOverlay);
     }
 
     /**
@@ -559,6 +571,12 @@ class MediaBaseViewer extends BaseViewer {
         this.mediaControls.addListener('togglemute', this.toggleMute);
         this.mediaControls.addListener('ratechange', this.handleRate);
         this.mediaControls.addListener('autoplaychange', this.handleAutoplay);
+        this.mediaControls.addListener('onCommentClick', comments => {
+            this.handleCommentClick(comments);
+        });
+        this.mediaControls.addListener('toggleCommentOverlay', () => {
+            this.toggleCommentOverlay();
+        });
     }
 
     /**
@@ -1227,6 +1245,35 @@ class MediaBaseViewer extends BaseViewer {
      */
     createTimerTag(tagName) {
         return Timer.createTag(this.options.file.id, tagName);
+    }
+
+    // need a better name , this is actually click on the scrubber
+    handleCommentClick(comments) {
+        if (comments) {
+            this.showTagOverlay();
+            this.renderTagList(comments.comments);
+        }
+    }
+
+    toggleCommentOverlay() {
+        if (this.tagsOverlay.classList.contains(CLASS_HIDDEN)) {
+            let comment = null;
+            const timestamps = Object.keys(this.comments);
+            // checks if there are comments between currTime - 1 and currTime + 1.
+            if (this.comments) {
+                const currTime = this.mediaEl.currentTime;
+                const timestamp = timestamps.find(
+                    t => currTime > parseInt(t, 10) - 1 && currTime < parseInt(t, 10) + 1,
+                );
+                if (timestamp) {
+                    comment = this.comments[timestamp];
+                }
+            }
+            this.showTagOverlay();
+            this.renderTagList(comment);
+        } else {
+            this.hideTagOverlay();
+        }
     }
 }
 

@@ -46,6 +46,7 @@ class MediaControls extends EventEmitter {
         this.playButtonEl = this.wrapperEl.querySelector('.bp-media-playpause-icon');
         this.setLabel(this.playButtonEl, __('media_play'));
 
+        this.showCommentBtnEl = this.wrapperEl.querySelector('.bp-media-show-comments-icon');
         this.volButtonEl = this.wrapperEl.querySelector('.bp-media-volume-icon');
         this.setLabel(this.volButtonEl, __('media_mute'));
 
@@ -92,6 +93,12 @@ class MediaControls extends EventEmitter {
         this.setupSettings();
         this.setupScrubbers();
         this.attachEventHandlers();
+
+        this.showCommentBtnEl.onclick = () => this.onShowCommentButtonClick();
+    }
+
+    onShowCommentButtonClick() {
+        this.emit('toggleCommentOverlay', null);
     }
 
     /**
@@ -167,6 +174,7 @@ class MediaControls extends EventEmitter {
         this.timeScrubberEl = undefined;
         this.volScrubberEl = undefined;
         this.playButtonEl = undefined;
+        this.showCommentBtnEl = undefined;
         this.volButtonEl = undefined;
         this.timecodeEl = undefined;
         this.durationEl = undefined;
@@ -291,6 +299,9 @@ class MediaControls extends EventEmitter {
         this.setTimeCode(this.mediaEl.currentTime || 0); // This also sets the aria values
         this.timeScrubber.on('valuechange', () => {
             this.emit('timeupdate', this.getTimeFromScrubber());
+        });
+        this.timeScrubber.on('onCommentClick', comment => {
+            this.emit('onCommentClick', comment);
         });
 
         this.volScrubber = new Scrubber(this.volScrubberEl, __('media_volume_slider'), 0, 100, 1, 1, 1);
@@ -978,7 +989,7 @@ class MediaControls extends EventEmitter {
         const times = Object.keys(comments);
         const videoComments = times.map(t => {
             return {
-                ...comments[t],
+                comments: [...comments[t]],
                 time: this.mediaEl.duration ? t / this.mediaEl.duration : 0,
             };
         });

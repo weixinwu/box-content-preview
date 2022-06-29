@@ -1,3 +1,9 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    flex-direction: column;
+}
 .tags-container {
     display: flex;
     flex-direction: column;
@@ -5,7 +11,7 @@
     font-size: 13px;
     font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 20px;
-    letter-spacing: .3px;
+    letter-spacing: 0.3px;
 
     .tags-list-header {
         padding: 0 20px;
@@ -26,7 +32,7 @@
             display: flex;
             align-items: center;
             padding: 8px;
-
+            min-width: 64px;
             &:hover {
                 text-decoration: underline;
                 cursor: pointer;
@@ -42,7 +48,7 @@
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                margin-right: .5em;
+                margin-right: 0.5em;
                 color: white;
                 line-height: 30px;
                 text-align: center;
@@ -54,7 +60,20 @@
 
             .tag-comment {
                 padding: 4px;
+                color: black;
             }
         }
+    }
+}
+.new-comment-container {
+    display: flex;
+    .input-title {
+    }
+    .input-box {
+        width: calc(100% - 50px);
+        height: 70px;
+    }
+    button {
+        width: 50px;
     }
 }

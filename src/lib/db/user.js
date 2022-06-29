@@ -17,6 +17,32 @@ export async function getCurrentUser() {
     return await request('users/me');
 }
 
+export function getUserById() {
+    const fakeId = Math.floor(Math.random() * 5);
+    const user = [
+        {
+            name: 'Inesita Du Pre',
+            initials: 'ID',
+        },
+        {
+            name: 'Nani Shovelbottom',
+            initials: 'NS',
+        },
+        {
+            name: 'Sly Meysham',
+            initials: 'SM',
+        },
+        {
+            name: 'Larbette Yosephs',
+            initials: 'LY',
+        },
+        {
+            name: 'Melicent Biffen',
+            initials: 'MB',
+        },
+    ];
+    return user[fakeId];
+}
 async function request(url) {
     if (!token) throw new Error('Token is not set');
 

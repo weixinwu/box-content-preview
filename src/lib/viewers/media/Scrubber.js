@@ -326,18 +326,13 @@ class Scrubber extends EventEmitter {
                 this.scrubberEl.appendChild(newNote);
                 const location = Math.max(Math.min(note.time, this.convertedValue), MIN_VALUE);
                 newNote.style.left = `${location * 100}%`;
-                newNote.onclick = () => this.onScrubberNoteClick(note);
-            });
-        }
-    }
+                newNote.onclick = () => {
+                    this.emit('onCommentClick', note);
 
-    /**
-     * scrubber note click event listener.
-     * @param {*} note
-     */
-    onScrubberNoteClick(note) {
-        if (note) {
-            console.log(' on note click , this will show the popup', note);
+                    this.setValue(note.time);
+                    this.emit('valuechange');
+                };
+            });
         }
     }
 }

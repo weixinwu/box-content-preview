@@ -6,7 +6,6 @@ import { ICON_PLAY_LARGE } from '../../icons';
 import { getComments, addComment } from '../../db/comments';
 import { getCurrentUser } from '../../db/user';
 
-const WEIXIN_ID = '18785632699';
 const MOUSE_MOVE_TIMEOUT_IN_MILLIS = 1000;
 const CLASS_PLAY_BUTTON = 'bp-media-play-button';
 const CLASS_VIEW_NOTE_BUTTON = 'bp-media-view-note-button';
@@ -63,7 +62,6 @@ class VideoBaseViewer extends MediaBaseViewer {
         button.innerHTML = 'View Note';
 
         this.lowerLights();
-        this.fetchComments();
     }
 
     /**
@@ -110,6 +108,7 @@ class VideoBaseViewer extends MediaBaseViewer {
      */
     loadUI() {
         super.loadUI();
+        this.fetchComments();
     }
 
     /**
@@ -302,6 +301,7 @@ class VideoBaseViewer extends MediaBaseViewer {
     fetchComments() {
         getComments('977307283157').then(comments => {
             if (comments && this.mediaControls) {
+                this.comments = comments;
                 this.mediaControls.addCommentsToVidScrubber(comments);
             }
         });
