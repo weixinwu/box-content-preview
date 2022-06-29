@@ -517,7 +517,7 @@ class BaseViewer extends EventEmitter {
 
         const { permissions } = this.options.file;
         if (permissions && !permissions.can_download) {
-            this.containerEl.addEventListener('contextmenu', this.preventDefault);
+            // this.containerEl.addEventListener('contextmenu', this.preventDefault);
         }
 
         this.addListener(VIEWER_EVENT.load, this.viewerLoadHandler);

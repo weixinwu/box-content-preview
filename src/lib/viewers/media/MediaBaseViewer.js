@@ -127,6 +127,7 @@ class MediaBaseViewer extends BaseViewer {
                 comments={comments}
                 mediaEl={this.mediaEl}
                 onTimeUpdate={this.handleTimeupdateFromMediaControls}
+                onShowAll={this.showAllTagsList.bind(this)}
             />,
             this.tagsOverlay,
         );
@@ -1263,25 +1264,49 @@ class MediaBaseViewer extends BaseViewer {
         }
     }
 
+    getFlatTagsList() {
+        const timestamps = Object.keys(this.comments);
+        // checks if there are comments between currTime - 1 and currTime + 1.
+        // if (this.comments) {
+        //     const currTime = this.mediaEl.currentTime;
+        //     const timestamp = timestamps.find(
+        //         t => currTime > parseInt(t, 10) - 1 && currTime < parseInt(t, 10) + 1,
+        //     );
+        //     if (timestamp) {
+        //         comment = this.comments[timestamp];
+        //     }
+        // }
+        const commentsWithTimestamps = timestamps.map(timestamp => {
+            return {
+                timestamp,
+                commentsList: this.comments[timestamp],
+            };
+        });
+        const flatList = [];
+        commentsWithTimestamps.forEach(c => {
+            c.commentsList.forEach(comment => {
+                flatList.push({
+                    ...comment,
+                    timestamp: c.timestamp,
+                });
+            });
+        });
+        return flatList;
+    }
+
     toggleCommentOverlay() {
         if (this.tagsOverlay.classList.contains(CLASS_HIDDEN)) {
-            let comment = null;
-            const timestamps = Object.keys(this.comments);
-            // checks if there are comments between currTime - 1 and currTime + 1.
-            if (this.comments) {
-                const currTime = this.mediaEl.currentTime;
-                const timestamp = timestamps.find(
-                    t => currTime > parseInt(t, 10) - 1 && currTime < parseInt(t, 10) + 1,
-                );
-                if (timestamp) {
-                    comment = this.comments[timestamp];
-                }
-            }
+            // let comment = null;
+
             this.showTagOverlay();
-            this.renderTagList(comment);
+            this.renderTagList(this.getFlatTagsList());
         } else {
             this.hideTagOverlay();
         }
+    }
+
+    showAllTagsList() {
+        this.renderTagList(this.getFlatTagsList());
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TagsList.scss';
 import { getUserById, getCurrentUser } from '../../db/user';
-import { addComment } from '../../db/comments';
+import { addComment, removeComment } from '../../db/comments';
 /**
  * Q:why not use real user name from the getUserById api?
  * A: difficult to set up demo data.
@@ -14,17 +14,18 @@ interface User {
 // timestamp in seconds
 function getTimeFromTimeStamp(timestamp) {
     const minutes = timestamp > 60 ? Math.round(timestamp / 60) : '0';
-    const seconds = timestamp > 10 ? timestamp : `0${timestamp}`;
+    const seconds = timestamp > 9 ? timestamp : `0${timestamp}`;
     return `${minutes}:${seconds}`;
 }
-export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
+export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll }) {
+    const videoID = '977307283157';
     const activeTagId = 2;
     const _tags = comments
         ? comments.map(c => {
               return { ...c, ...getUserById(1) };
           })
         : [];
-    const [tagsList, _] = useState(_tags);
+    const [tagsList, setTagsList] = useState(_tags);
     const textareaRef = useRef(null);
     const fileInputRef = useRef<any>(null);
     const [user, setUser] = useState<User>();
@@ -45,25 +46,54 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
         setSelectedFiles(files => files.filter(f => f !== file));
     }
 
+    async function removeTag(id: string) {
+        setTagsList(tags => tags.filter(t => t.id !== id));
+        await removeComment(videoID, id);
+    }
+
     return (
         <div className="container">
             <div className="tags-container">
-                <h2 className="tags-list-header">All tags</h2>
-                {comments &&
-                    tagsList.map(tag => {
-                        const { initials, text, createdAt, name, id, timestamp } = tag;
-                        return (
-                            <div key={id} className={`tag-container ${id === activeTagId && 'active'}`}>
-                                <div className="tag-container-left" onClick={() => onTimeUpdate(timestamp)}>
-                                    {getTimeFromTimeStamp(timestamp)}
+                <h2 className="tags-list-header">Tags</h2>
+                <span className="show-all" onClick={onShowAll}>
+                    Show all
+                </span>
+                <div className="list-container">
+                    {comments &&
+                        tagsList.map(tag => {
+                            const { initials, text, createdAt, name, id, timestamp } = tag;
+                            return (
+                                <div key={id} className={`tag-container ${id === activeTagId && 'active'}`}>
+                                    <div className="tag-container-left" onClick={() => onTimeUpdate(timestamp)}>
+                                        {getTimeFromTimeStamp(timestamp)}
+                                    </div>
+                                    <div className="tag-container-right">
+                                        <div
+                                            className="user-icon"
+                                            data-initials={initials}
+                                            title={name.substring(0, 8)}
+                                        />
+                                        <div className="tag-comment">{text}</div>
+                                        <button
+                                            className="tag-remove-btn"
+                                            onClick={() => removeTag(id)}
+                                            title="Remove tag"
+                                        >
+                                            <svg
+                                                fill="#f9f8f8"
+                                                height="12px"
+                                                viewBox="0 0 24 24"
+                                                width="21px"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="tag-container-right">
-                                    <div className="user-icon" data-initials={initials} title={name.substring(0, 8)} />
-                                    <div className="tag-comment">{text}</div>
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                </div>
             </div>
 
             <div className="new-comment-container">
@@ -74,8 +104,6 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
                 <div className="new-comment-bottom">
                     <button
                         onClick={() => {
-                            const videoID = '977307283157';
-                            const userId = '1123';
                             const timestamp = Math.floor(mediaEl.currentTime);
                             addComment(
                                 videoID,
@@ -87,6 +115,7 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
                                 console.log(result);
                                 textareaRef.current.value = '';
                                 setSelectedFiles([]);
+                                setTagsList(tags => [...tags, { ...result, ...getUserById(1) }]);
                                 // TODO: refresh video timeline to show the comment indicators
                             });
                         }}
