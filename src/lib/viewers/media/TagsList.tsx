@@ -39,12 +39,12 @@ function parseComment(text) {
 }
 
 function parseMentions(text: string): string {
-    const match = text.match(/_@(\w+)/);
+    const match = text.match(/@(\w+)/);
     if (!match) return text;
 
     const [mention, username] = [...match];
     text = text.replace(mention, `<span class="tag-mention">@${username}</span>`);
-    return parseMentions(text);
+    return text;
 }
 
 export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll }) {
