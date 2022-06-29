@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './TagInput.scss';
 
-export default function TagInput(): JSX.Element | null {
-    const [sampleData, setSampleData] = useState({
-        timestamp: '12:00',
-        name: 'John Doe',
-        initials: 'JD',
-    });
+type Props = {
+    timestamp?: string;
+    name?: string;
+    initials?: string;
+    onSubmit?: () => void;
+    onCancel?: () => void;
+};
+
+export default function TagInput(props: Props): JSX.Element | null {
     return (
         <div className="tag-input-container">
             <div className="user-icon" data-initials={sampleData.initials} title={sampleData.name} />
