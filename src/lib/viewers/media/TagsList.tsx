@@ -150,6 +150,7 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                 </div>
                 <div className="new-comment-bottom">
                     <button
+                        className="button button-primary"
                         onClick={() => {
                             const timestamp = Math.floor(mediaEl.currentTime);
                             addComment(
@@ -170,18 +171,32 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll })
                     >
                         Done
                     </button>
-                    <div className="new-comment-attachments">
-                        {selectedFiles.map(file => (
-                            <div key={file.name}>
-                                {file.name}{' '}
-                                <button onClick={() => removeSelectedFile(file)} type="button">
-                                    X
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                    <input
+                        ref={fileInputRef}
+                        className="hidden"
+                        id="files"
+                        multiple
+                        onChange={selectFiles}
+                        type="file"
+                    />
+                    <label className="button button-secondary" htmlFor="files">
+                        Select files
+                    </label>
                 </div>
-                <input ref={fileInputRef} multiple onChange={selectFiles} type="file" />
+                <div className="new-comment-attachments">
+                    {selectedFiles.map(file => (
+                        <div key={file.name}>
+                            {file.name}{' '}
+                            <button
+                                className="button button-primary button-primary-sm"
+                                onClick={() => removeSelectedFile(file)}
+                                type="button"
+                            >
+                                X
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

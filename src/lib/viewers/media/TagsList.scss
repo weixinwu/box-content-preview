@@ -163,8 +163,17 @@
         display: flex;
         flex-direction: row;
         margin-top: 3px;
-        button {
-            background-color: #0061d5b8;
+
+        .hidden {
+            display: none;
+        }
+
+        .new-comment-attachments {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .button {
             border: none;
             color: white;
             padding: 5px 2px;
@@ -172,10 +181,25 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            width: 50px;
+            margin: 1px;
+            width: auto;
             border-radius: 5px;
-            &:hover {
-                background-color: #004ca8b8;
+            &-primary {
+                background-color: #0061d5b8;
+                &:hover {
+                    background-color: #004ca8b8;
+                }
+
+                &-sm {
+                    padding: 1px;
+                }
+            }
+
+            &-secondary {
+                background-color: #717e8eb8;
+                &:hover {
+                    background-color: #5e6873b8;
+                }
             }
         }
     }
