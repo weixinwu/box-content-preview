@@ -26,6 +26,16 @@
     }
 }
 
+.show-all {
+    cursor: pointer;
+    text-decoration: underline;
+    display: flex;
+    align-self: flex-end;
+    padding: 17px;
+    font-size: 10px;
+    position: absolute;
+}
+
 .tags-container {
     display: flex;
     flex-direction: column;

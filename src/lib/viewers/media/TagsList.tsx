@@ -17,7 +17,7 @@ function getTimeFromTimeStamp(timestamp) {
     const seconds = timestamp > 9 ? timestamp : `0${timestamp}`;
     return `${minutes}:${seconds}`;
 }
-export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
+export default function TagsList({ comments, mediaEl, onTimeUpdate, onShowAll }) {
     const videoID = '977307283157';
     const activeTagId = 2;
     const _tags = comments
@@ -54,7 +54,8 @@ export default function TagsList({ comments, mediaEl, onTimeUpdate }) {
     return (
         <div className="container">
             <div className="tags-container">
-                <h2 className="tags-list-header">All tags</h2>
+                <h2 className="tags-list-header">Tags</h2>
+                <span className="show-all" onClick={onShowAll}>Show all</span>
                 <div className="list-container">
                     {comments &&
                         tagsList.map(tag => {
